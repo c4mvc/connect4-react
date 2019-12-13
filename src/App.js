@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-// import logo from "./logo.svg";
 import "./App.css";
 import _ from "underscore";
-import checkWin from "./game-logic";
+import checkWin from "connect4-check-win";
 import { getLastGame, postMoves } from "./game-storage";
 import Header from "./Header";
 import Buttons from "./Buttons";
