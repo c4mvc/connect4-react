@@ -1,5 +1,5 @@
 const getLastGame = () => {
-  var moves = JSON.parse(localStorage.getItem("lastGame"));
+  const moves = JSON.parse(localStorage.getItem("lastGame"));
   return moves;
 };
 

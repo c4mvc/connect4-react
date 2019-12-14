@@ -3,18 +3,18 @@ import { playerType } from "./constants";
 
 class CursorZone extends Component {
   render() {
-
-    console.log("this.props.gameCursor", this.props.gameCursor);
+    const { gameCursor, moveCursor, dropDiscToZone } = this.props;
+    console.log("this.props.gameCursor", gameCursor);
 
     return (
       <div className="bottom-buffer">
         <div className="clearfix area-width">
-          {this.props.gameCursor.map((cursor, index) => {
+          {gameCursor.map((cursor, index) => {
             return (
               <div
                 className="cursor-area"
-                onMouseOver={() => this.props.moveCursor(cursor)}
-                onClick={() => this.props.dropDiscToZone(cursor)}
+                onMouseOver={() => moveCursor(cursor)}
+                onClick={() => dropDiscToZone(cursor)}
               >
                 <div style={{ verticalAlign: "middle" }}>
                   {cursor.player === playerType.One && (

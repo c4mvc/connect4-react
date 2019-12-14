@@ -3,9 +3,10 @@ import { playerType } from "./constants";
 
 class GameZone extends Component {
   render() {
+    const { gameZone } = this.props;
     return (
       <div>
-        {this.props.gameZone.map((row, index) => {
+        {gameZone.map((row, index) => {
           return (
             <div key={index} className="clearfix area-width">
               {row.map((cell, i) => {

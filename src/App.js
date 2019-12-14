@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import "./App.css";
 import _ from "underscore";
 import checkWin from "connect4-check-win";
+import "./App.css";
 import { getLastGame, postMoves } from "./game-storage";
 import Header from "./Header";
 import Buttons from "./Buttons";
@@ -50,12 +50,10 @@ class App extends Component {
   }
 
   undoLastMove() {
-    const { lastMove } = this.state;
+    const { lastMove, gameZone } = this.state;
     if (lastMove) {
-      const { gameZone } = this.state;
-      let gameZoneNew = [...gameZone];
-      gameZoneNew[lastMove.rowIndex][lastMove.columnIndex].player =
-        playerType.None;
+      const gameZoneNew = [...gameZone];
+      gameZoneNew[lastMove.rowIndex][lastMove.columnIndex].player = playerType.None;
 
       this.toggleCursorOfPlayer();
       this.setState({ gameZone: gameZoneNew, lastMove: undefined });
@@ -75,7 +73,7 @@ class App extends Component {
     let gameZoneNew = [...gameZone];
     function drawMovesForReplay() {
       setTimeout(function() {
-        var move = moves[i];
+        const move = moves[i];
         gameZoneNew[move.rowIndex][move.columnIndex].player = move.player;
 
         self.setState({ gameZone: gameZoneNew });
@@ -90,10 +88,10 @@ class App extends Component {
   }
 
   buildGameZone() {
-    let gameZone = [];
-    for (var row = 0; row < totalRows; row++) {
-      gameZone[row] = new Array();
-      for (var column = 0; column < totalColumns; column++) {
+    const gameZone = [];
+    for (let row = 0; row < totalRows; row++) {
+      gameZone[row] = [];
+      for (let column = 0; column < totalColumns; column++) {
         gameZone[row].push(new gameZoneCell(playerType.None, row, column));
       }
     }
@@ -101,16 +99,16 @@ class App extends Component {
   }
 
   loadGameCursor(columnIndex) {
-    let { gameCursor } = this.state;
+    const { gameCursor, currentPlayer } = this.state;
 
     _.each(gameCursor, function(cursor, index) {
-      var cursorObj = new GameCursor(false, index, playerType.None);
+      const cursorObj = new GameCursor(false, index, playerType.None);
       gameCursor[index] = cursorObj;
     });
     gameCursor[columnIndex] = new GameCursor(
       false,
       columnIndex,
-      this.state.currentPlayer
+      currentPlayer
     );
     const lastCursor = _.first(gameCursor);
     this.setState({ gameCursor, lastCursor });
@@ -126,7 +124,8 @@ class App extends Component {
   }
 
   moveCursor(cursor) {
-    if (this.state.lastCursor.columnIndex == cursor.columnIndex) {
+    const { lastCursor } = this.state;
+    if (lastCursor.columnIndex === cursor.columnIndex) {
       return;
     }
 
@@ -135,9 +134,10 @@ class App extends Component {
   }
 
   availableColumns() {
-    var movesArray = new Array();
-    for (var i = 0; i < totalColumns; i++) {
-      if (this.state.gameZone[0][i].player === 0) {
+    const { gameZone } = this.state;
+    const movesArray = [];
+    for (let i = 0; i < totalColumns; i++) {
+      if (gameZone[0][i].player === 0) {
         movesArray.push(i);
       }
     }
@@ -145,8 +145,10 @@ class App extends Component {
   }
 
   availableFirstRow(col, player) {
-    for (var i = 0; i < totalRows; i++) {
-      if (this.state.gameZone[i][col].player !== 0) {
+    const { gameZone } = this.state;
+    let i;
+    for (i = 0; i < totalRows; i++) {
+      if (gameZone[i][col].player !== 0) {
         break;
       }
     }
@@ -172,7 +174,7 @@ class App extends Component {
     console.log("dropDiscToZone", cursor);
     const { movesStorage, currentPlayer } = this.state;
     const availableColumns = this.availableColumns();
-    if (availableColumns.indexOf(cursor.columnIndex) != -1) {
+    if (availableColumns.indexOf(cursor.columnIndex) !== -1) {
       const currentColumn = cursor.columnIndex;
       const { currentRow, gameZone } = this.moveAndPlaceDisk(currentColumn);
       const lastMove = new gameZoneCell(
@@ -189,7 +191,8 @@ class App extends Component {
   }
 
   getNextPlayer() {
-    if (this.state.currentPlayer === playerType.One) {
+    const { currentPlayer } = this.state;
+    if (currentPlayer === playerType.One) {
       return playerType.Two;
     }
     return playerType.One;
@@ -212,7 +215,7 @@ class App extends Component {
         currentPlayer
       })
     ) {
-      var winPlayer = currentPlayer; // this.state.currentPlayer;
+      const winPlayer = currentPlayer; // this.state.currentPlayer;
       const self = this;
 
       setTimeout(() => {
@@ -231,7 +234,8 @@ class App extends Component {
   // buildGameZone();
 
   render() {
-    console.log("", this.state.gameZone, this.state.gameCursor);
+    const { gameZone, gameCursor } = this.state;
+    console.log("", gameZone, gameCursor);
     return (
       <div className="container">
         <Header />
@@ -254,8 +258,8 @@ class App extends Component {
         </div>
 
         <GameArea
-          gameCursor={this.state.gameCursor}
-          gameZone={this.state.gameZone}
+          gameCursor={gameCursor}
+          gameZone={gameZone}
           moveCursor={this.moveCursor}
           dropDiscToZone={this.dropDiscToZone}
         />
